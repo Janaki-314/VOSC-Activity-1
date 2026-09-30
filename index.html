@@ -1,35 +1,200 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic-Tac-Toe</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tic Tac Toe</title>
 
-<body>
+<style>
+    * {
+        box-sizing: border-box;
+    }
 
-    <div class="game">
-        <h1>Tic-Tac-Toe</h1>
+    body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+    }
 
-        <p id="status">Player X's Turn</p>
+    .game {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
 
-        <div class="board">
-            <button class="cell"></button>
-            <button class="cell"></button>
-            <button class="cell"></button>
-            <button class="cell"></button>
-            <button class="cell"></button>
-            <button class="cell"></button>
-            <button class="cell"></button>
-            <button class="cell"></button>
-            <button class="cell"></button>
-        </div>
+    h1 {
+        color: #5b2c83;
+        margin-bottom: 10px;
+    }
 
-        <button id="restart">Restart Game</button>
+    #status {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .board {
+        display: grid;
+        grid-template-columns: repeat(3, 90px);
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .cell {
+        width: 90px;
+        height: 90px;
+        border: none;
+        border-radius: 12px;
+        background: #e8eaf6;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .cell:hover {
+        background: #d1c4e9;
+    }
+
+    .x {
+        color: #e53935;
+    }
+
+    .o {
+        color: #1e88e5;
+    }
+
+    #reset {
+        margin-top: 20px;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 10px;
+        background: #5b2c83;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    #reset:hover {
+        background: #7b1fa2;
+    }
+</style>
+
+</head><body><div class="game">
+
+    <h1>Tic Tac Toe</h1>
+
+    <div id="status">Player X's Turn</div>
+
+    <div class="board">
+        <button class="cell" onclick="play(0)"></button>
+        <button class="cell" onclick="play(1)"></button>
+        <button class="cell" onclick="play(2)"></button>
+
+        <button class="cell" onclick="play(3)"></button>
+        <button class="cell" onclick="play(4)"></button>
+        <button class="cell" onclick="play(5)"></button>
+
+        <button class="cell" onclick="play(6)"></button>
+        <button class="cell" onclick="play(7)"></button>
+        <button class="cell" onclick="play(8)"></button>
     </div>
 
-    <script src="script.js"></script>
+    <button id="reset" onclick="resetGame()">Restart Game</button>
+
+</div>
+
+<script>
+    let board = ["", "", "", "", "", "", "", "", ""];
+    let currentPlayer = "X";
+    let gameOver = false;
+
+    let cells = document.querySelectorAll(".cell");
+    let status = document.getElementById("status");
+
+    function play(position) {
+
+        if (board[position] != "" || gameOver) {
+            return;
+        }
+
+        board[position] = currentPlayer;
+
+        cells[position].innerText = currentPlayer;
+
+        if (currentPlayer == "X") {
+            cells[position].classList.add("x");
+        } else {
+            cells[position].classList.add("o");
+        }
+
+        checkWinner();
+
+        if (!gameOver) {
+            if (currentPlayer == "X") {
+                currentPlayer = "O";
+            } else {
+                currentPlayer = "X";
+            }
+
+            status.innerText = "Player " + currentPlayer + "'s Turn";
+        }
+    }
+
+    function checkWinner() {
+
+        let wins = [
+            [0,1,2],
+            [3,4,5],
+            [6,7,8],
+            [0,3,6],
+            [1,4,7],
+            [2,5,8],
+            [0,4,8],
+            [2,4,6]
+        ];
+
+        for (let i = 0; i < wins.length; i++) {
+
+            let a = wins[i][0];
+            let b = wins[i][1];
+            let c = wins[i][2];
+
+            if (board[a] != "" &&
+                board[a] == board[b] &&
+                board[b] == board[c]) {
+
+                status.innerText = "Player " + currentPlayer + " Wins!";
+                gameOver = true;
+                return;
+            }
+        }
+
+        if (!board.includes("")) {
+            status.innerText = "It's a Draw!";
+            gameOver = true;
+        }
+    }
+
+    function resetGame() {
+
+        board = ["", "", "", "", "", "", "", "", ""];
+        currentPlayer = "X";
+        gameOver = false;
+
+        for (let i = 0; i < cells.length; i++) {
+            cells[i].innerText = "";
+            cells[i].classList.remove("x");
+            cells[i].classList.remove("o");
+        }
+
+        status.innerText = "Player X's Turn";
+    }
+</script>
 
 </body>
 </html>
